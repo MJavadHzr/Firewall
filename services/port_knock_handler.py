@@ -22,8 +22,6 @@ class PortKnock_Handler():
 
     def _initialize(self):
         self.state = 0
-        self.args = [''] * len(self.stages)
-        self.in_out = ''
     
     def _cancel(self):
         print('get back to menu')
@@ -125,7 +123,7 @@ class PortKnock_Handler():
             if p.returncode != 0:
                 print('something wrong happened!')
             else:
-                print('rule set completed!')
+                print('rule set successfully!')
             print(p.stdout)
             print('------------------------------------------------------')
         
