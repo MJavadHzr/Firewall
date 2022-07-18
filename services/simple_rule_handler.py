@@ -1,6 +1,7 @@
 from logging import raiseExceptions
 import subprocess as sp
 import ipaddress
+import validators
 import re
 
 
@@ -218,7 +219,7 @@ class SimpleRule_Handler():
                 self._next_state()
                 return
             elif command == 'ftp':
-                port_n = '20,21'
+                port_n = '20:21'
                 protocol = 'tcp'
                 self.a_protocol = 'ftp'
                 break
@@ -251,6 +252,7 @@ class SimpleRule_Handler():
                 port_n = '443'
                 protocol = 'tcp'
                 self.a_protocol = 'https'
+                break
             else:
                 print('invalid input!')
                 command = input().strip().lower()
@@ -343,7 +345,7 @@ class SimpleRule_Handler():
             else:
                 arg = command
                 break
-        self.args[self.state] = f'-m string --domain {arg}'
+        self.args[self.state] = f'-m string --string {arg} --algo kmp'
         self._next_state()
 
     def _dhcp_mac(self):
@@ -397,6 +399,7 @@ class SimpleRule_Handler():
     def _http_header(self):
         msg = """(Control http packets with header {key:value})
             {key:value}: header you want to control
+            none: for no header filtering
             b: back
             c: cancel
         """
@@ -409,15 +412,18 @@ class SimpleRule_Handler():
             elif command == 'c':
                 self.state = -1
                 return
+            elif command == 'none':
+                arg = ''
+                break
             else:
                 if re.match(r'(.+):(.+)', command.lower()):
-                    arg = command
+                    arg = f'-m string --string {command} --algo kmp'
                     break
                 else:
                     print('invalid input!')
                     command = input().strip()
 
-        self.args[self.state] = f'-m string --string {arg} --algo kmp'
+        self.args[self.state] = arg
         self._next_state()
 
     def _is_tcp_udp(self):
@@ -533,9 +539,12 @@ class SimpleRule_Handler():
                 arg = ''
                 break
             else:
-                # todo
-                print('input is not a valid IP address')
-                command = input().strip()
+                # if validators.url(command):
+                arg = f'-m string --string {command} --algo bm'
+                break
+                # else:
+                    # print('input is not a valid URL address')
+                    # command = input().strip()
 
         self.args[self.state] = arg
         self._next_state()
