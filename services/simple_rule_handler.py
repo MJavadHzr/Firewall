@@ -29,7 +29,8 @@ class SimpleRule_Handler():
             13: self._in_port,
             14: self._out_port,
             15: self._set_target,
-            16: self._set_rule
+            16: self._set_rule,
+            17: self._set_action
         }
 
     def run(self):
@@ -41,7 +42,7 @@ class SimpleRule_Handler():
                 return
 
     def _initialize(self):
-        self.state = 0
+        self.state = 17
         self.args = [''] * len(self.stages)
         self.in_out = ''
 
@@ -56,11 +57,9 @@ class SimpleRule_Handler():
         print('---------------[result]---------------')
         if p.returncode != 0:
             print('something wrong happened!')
-            print(p.stdout)
         else:
-            
-            print('rule set completed!')
-            print(p.stdout)
+            print('rule set successfully!')
+        print(p.stdout)
         print('--------------------------------------')
         raiseExceptions()
 
@@ -117,6 +116,8 @@ class SimpleRule_Handler():
                 next = 13
             else:
                 next = 15
+        elif current == 17:
+            next = 0
         else:
             next = current + 1
 
@@ -126,8 +127,10 @@ class SimpleRule_Handler():
         self.args[self.state] = ''
         curr = self.state
         prev = 0
-        if curr <= 1:
-            prev = curr - 1
+        if curr == 0:
+            prev = 17
+        elif curr == 1:
+            prev = 0
         elif 2 <= curr and curr <= 7:
             prev = 1
         elif curr == 8:
@@ -163,6 +166,32 @@ class SimpleRule_Handler():
         
         self.state = prev
 
+    def _set_action(self):
+        msg = """(What do you want to do?)
+            a: to append rule (add rule to the tail of the chain)
+            d: to delete rule
+            i: to insert rule (add rule to the head of the cahin)
+            b: back
+            c: cancel
+        """
+        print(msg)
+        command = input().strip().lower()
+        while True:
+            if command == 'b':
+                self._prev_state()
+                return
+            elif command == 'c':
+                self.state = -1
+                return
+            elif command == 'a' or command == 'd' or command == 'i':
+                self.action = command.upper()
+                break
+            else:
+                print('invalid input!')
+                command = input().strip().lower()
+        
+        self._next_state()
+    
     def _select_protocol(self):
         msg = """(Select which application layer protocol you want to filter)
             ftp: FTP
@@ -480,7 +509,7 @@ class SimpleRule_Handler():
                 print('invalid input!')
                 command = input().strip()
 
-        self.args[self.state] = f'-A {arg}'
+        self.args[self.state] = f'-{self.action} {arg}'
         self.in_out = arg
         self._next_state()
 
@@ -610,7 +639,7 @@ class SimpleRule_Handler():
         self._next_state()
 
     def _set_target(self):
-        msg = """"(Target for rule):
+        msg = """(Target for rule):
             a: for ACCEPT rule
             d: for DROP rule
             r: for REJECT rule
