@@ -1,8 +1,7 @@
-from logging import raiseExceptions
-import subprocess as sp
-import ipaddress
-import validators
 import re
+import ipaddress
+import subprocess as sp
+from logging import raiseExceptions
 
 
 class SimpleRule_Handler():

@@ -1,6 +1,6 @@
 import numpy as np
-from logging import raiseExceptions
 import subprocess as sp
+from logging import raiseExceptions
 
 
 class PortKnock_Handler():
