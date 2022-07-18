@@ -6,7 +6,19 @@ class View_Handler():
         pass
 
     def run(self):
-        args = 'sudo iptables -L -n -v'.split()
+        while True:
+            c = input('with details(Y/N)?').lower()
+            if c == 'y':
+                verbose = '-v'
+                break
+            elif c == 'n':
+                verbose = ''
+                break
+            else:
+                continue
+                
+                
+        args = f'sudo iptables -L -n {verbose}'.split()
         p = sp.run(args, stdout=sp.PIPE, universal_newlines=True)
 
         print('-----------------[result]-----------------')
