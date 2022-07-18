@@ -9,7 +9,7 @@ class PortScanning_Handler():
             0: self._get_threshold,
             1: self._set_rule
         }
-    
+
     def run(self):
         self._initialize()
         while True:
@@ -20,17 +20,17 @@ class PortScanning_Handler():
 
     def _initialize(self):
         self.state = 0
-        
+
     def _cancel(self):
         print('get back to menu')
         raiseExceptions()
-    
+
     def _next_state(self):
         self.state += 1
-        
+
     def _prev_state(self):
         self.state -= 1
-    
+
     def _get_threshold(self):
         msg = """Enter threshould to block for port scanners
             {n} {scale}: number of connections per scale, scale is one of 'second', 'minute', 'hour', 'day'
@@ -59,15 +59,15 @@ class PortScanning_Handler():
                 except:
                     print('invalid input!')
                     command = input().strip().lower()
-        
+
         self._next_state()
-        
+
     def _set_rule(self):
         command = f'sudo iptables -A INPUT -p tcp --syn -m limit --limit {self.n}/{self.scale} -j REJECT'
-        
+
         print('--------------[command]--------------')
         print(command)
-        
+
         p = sp.run(command.split(), stdout=sp.PIPE, universal_newlines=True)
 
         print('---------------[result]---------------')

@@ -52,7 +52,7 @@ class SimpleRule_Handler():
                            [a for a in self.args if a != ''])
         print('--------------[command]--------------')
         print(command)
-        
+
         p = sp.run(command.split(), stdout=sp.PIPE, universal_newlines=True)
 
         print('---------------[result]---------------')
@@ -164,7 +164,7 @@ class SimpleRule_Handler():
             prev = 11
         else:
             prev = curr - 1
-        
+
         self.state = prev
 
     def _set_action(self):
@@ -190,9 +190,9 @@ class SimpleRule_Handler():
             else:
                 print('invalid input!')
                 command = input().strip().lower()
-        
+
         self._next_state()
-    
+
     def _select_protocol(self):
         msg = """(Select which application layer protocol you want to filter)
             ftp: FTP
@@ -485,7 +485,7 @@ class SimpleRule_Handler():
                 except:
                     print('invalid input!')
                     command = input().strip().lower()
-        
+
         self.args[self.state] = f'-m limit --limit {n}/{scale}'
         self._next_state()
 
@@ -543,8 +543,8 @@ class SimpleRule_Handler():
                 arg = f'-m string --string {command} --algo bm'
                 break
                 # else:
-                    # print('input is not a valid URL address')
-                    # command = input().strip()
+                # print('input is not a valid URL address')
+                # command = input().strip()
 
         self.args[self.state] = arg
         self._next_state()

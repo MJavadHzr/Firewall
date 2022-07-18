@@ -24,7 +24,8 @@ def show_services():
 
 while True:
     print("================================================================================")
-    print("======[choose the NUMBER of your desired service: (or type 'exit' to exit)]=====")
+    print(
+        "======[choose the NUMBER of your desired service: (or type 'exit' to exit)]=====")
     print("================================================================================")
     show_services()
     command = input()

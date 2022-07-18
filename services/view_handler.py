@@ -16,8 +16,7 @@ class View_Handler():
                 break
             else:
                 continue
-                
-                
+
         args = f'sudo iptables -L -n {verbose}'.split()
         p = sp.run(args, stdout=sp.PIPE, universal_newlines=True)
 
