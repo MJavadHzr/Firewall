@@ -119,7 +119,6 @@ class DoS_Handler():
         commands.append(root + ' ' + '--set --rsource')
         commands.append(root + ' ' + f'--rcheck --seconds {self.dns_second} --hitcount {self.dns_count} -j DROP')
 
-        print(commands)
         print('------------------------------------------------------')
         for c in commands:
             print(c)
@@ -160,7 +159,7 @@ class DoS_Handler():
         self._next_state()
 
     def _set_slowloris_rule(self):
-        command = f'sudo iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --conlimit-above {self.slowloris_n} -j DROP'
+        command = f'sudo iptables -A INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above {self.slowloris_n} -j DROP'
 
         print('------------------------[command]------------------------')
         print(command)
